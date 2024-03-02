@@ -4,88 +4,67 @@
 #include <string.h>
 
 #define MAX_ROUNDS 10
+#define MAX_NAME_LENGTH 20
 
-// Funkcja do generowania losowego ruchu komputera
-int generateComputerMove() {
-    return rand() % 3; // 0 - kamień, 1 - papier, 2 - nożyce
+// Funkcja do wybierania losowego ruchu komputera (papier, kamień, nożyce)
+int computerMove() {
+    return rand() % 3; // 0 - papier, 1 - kamień, 2 - nożyce
 }
 
-// Funkcja do zwracania nazwy ruchu
-const char* moveToString(int move) {
-    switch(move) {
-        case 0:
-            return "Kamień";
-        case 1:
-            return "Papier";
-        case 2:
-            return "Nożyce";
-        default:
-            return "Nieznany ruch";
-    }
+// Funkcja do sprawdzania wyniku rundy
+int checkRound(int playerMove, int computerMove) {
+    if ((playerMove == 0 && computerMove == 1) || // papier pokonuje kamień
+        (playerMove == 1 && computerMove == 2) || // kamień pokonuje nożyce
+        (playerMove == 2 && computerMove == 0))   // nożyce pokonują papier
+        return 1; // gracz wygrywa
+    else if (playerMove == computerMove)
+        return 0; // remis
+    else
+        return -1; // komputer wygrywa
 }
 
 int main() {
+    int playerMove, computerMoveResult, roundCount = 0;
+    int playerWins = 0, computerWins = 0, draws = 0;
+    char command[10];
+
     srand(time(NULL)); // Inicjalizacja generatora liczb pseudolosowych
-    int playerMove, computerMove;
-    int round = 0;
-    int playerScore = 0, computerScore = 0;
-    int moves[MAX_ROUNDS][2]; // Tablica do przechowywania ruchów w poszczególnych rundach (0 - gracz, 1 - komputer)
 
-    printf("Witaj w grze Papier, Kamień, Nożyce!\n");
-
-    while (round < MAX_ROUNDS) {
-        printf("\nRunda %d:\n", round + 1);
-        printf("Twój ruch (0 - Kamień, 1 - Papier, 2 - Nożyce): ");
-        if (scanf("%d", &playerMove) != 1) {
-            printf("Błąd podczas wczytywania ruchu. Koniec gry.\n");
-            break;
-        }
+    while (1) {
+        printf("Podaj swój ruch (0 - papier, 1 - kamień, 2 - nożyce): ");
+        scanf("%d", &playerMove);
 
         if (playerMove < 0 || playerMove > 2) {
-            printf("Niepoprawny ruch! Spróbuj jeszcze raz.\n");
+            printf("Niepoprawny ruch. Podaj liczbę od 0 do 2.\n");
             continue;
         }
 
-        computerMove = generateComputerMove();
-        printf("Komputer wybrał: %s\n", moveToString(computerMove));
+        computerMoveResult = computerMove();
+        printf("Komputer wybrał: %d\n", computerMoveResult);
 
-        // Zapisanie ruchów w tablicy
-        moves[round][0] = playerMove;
-        moves[round][1] = computerMove;
+        int result = checkRound(playerMove, computerMoveResult);
 
-        // Sprawdzenie wyniku rundy
-        if ((playerMove == 0 && computerMove == 2) ||
-            (playerMove == 1 && computerMove == 0) ||
-            (playerMove == 2 && computerMove == 1)) {
-            printf("Wygrałeś rundę!\n");
-            playerScore++;
-        } else if (playerMove == computerMove) {
-            printf("Remis!\n");
-        } else {
-            printf("Przegrałeś rundę!\n");
-            computerScore++;
-        }
+        if (result == 1)
+            playerWins++;
+        else if (result == -1)
+            computerWins++;
+        else
+            draws++;
 
-        round++;
+        roundCount++;
+
+        printf("Wynik rundy: %d\n", result);
+
+        printf("Czy chcesz zakończyć grę? (tak/nie): ");
+        scanf("%s", command);
+
+        if (strcmp(command, "tak") == 0 || roundCount >= MAX_ROUNDS)
+            break;
     }
 
-    printf("\nWyniki:\n");
-    printf("Gracz: %d\n", playerScore);
-    printf("Komputer: %d\n", computerScore);
-
-    // Wyświetlenie wszystkich ruchów
-    char command[10];
-    printf("\nWpisz 'scores', aby zobaczyć wszystkie ruchy: ");
-    scanf("%s", command);
-    if (strcmp(command, "scores") == 0) {
-        printf("\nWszystkie ruchy:\n");
-        for (int i = 0; i < round; i++) {
-            printf("Runda %d: Gracz - %s, Komputer - %s\n", i + 1, moveToString(moves[i][0]), moveToString(moves[i][1]));
-        }
-    } else {
-        printf("Niepoprawna komenda.\n");
-    }
+    printf("Liczba zwycięstw gracza: %d\n", playerWins);
+    printf("Liczba zwycięstw komputera: %d\n", computerWins);
+    printf("Liczba remisów: %d\n", draws);
 
     return 0;
 }
-
