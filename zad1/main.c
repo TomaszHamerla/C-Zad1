@@ -1,12 +1,9 @@
 #include <stdio.h>
 
 int main() {
-    char name[100]; 
-
-    printf("Podaj swoje imię: ");
+    printf("Give your name");
+    char name[10];
     scanf("%s", name);
-
-    printf("Witaj, %s!\n", name);
-
+    printf("Hello %s", name);
     return 0;
 }
