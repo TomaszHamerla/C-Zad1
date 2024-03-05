@@ -7,9 +7,9 @@ int factorial(int n) {
         return n * factorial(n - 1);
 }
 
-void calculateFactorials(int array[], int size) {
+void calculateFactorials(int arr[], int size) {
     for (int i = 0; i < size; i++) {
-        printf("Silnia dla liczby %d: %d\n", array[i], factorial(array[i]));
+        printf("Factorial for number %d = %d\n", arr[i], factorial(arr[i]));
     }
 }
 
