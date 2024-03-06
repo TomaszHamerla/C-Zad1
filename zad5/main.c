@@ -1,12 +1,10 @@
 #include <stdio.h>
 
-int sum_of_multiples(int n) {
-    if (n < 0) {
+int sumOfMultiples(int number) {
+    if (number < 0)
         return 0;
-    }
-
     int sum = 0;
-    for (int i = 1; i < n; i++) {
+    for (int i = 0; i < number; i++) {
         if (i % 3 == 0 || i % 5 == 0) {
             sum += i;
         }
@@ -15,8 +13,6 @@ int sum_of_multiples(int n) {
 }
 
 int main() {
-    int number = 10;
-    int result = sum_of_multiples(number);
-    printf("Suma wielokrotności 3 lub 5 poniżej %d wynosi %d\n", number, result);
+    printf("%d", sumOfMultiples(10));
     return 0;
 }
