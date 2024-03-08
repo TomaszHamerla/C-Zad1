@@ -1,70 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h>
 
-#define MAX_ROUNDS 10
-#define MAX_NAME_LENGTH 20
-
-// Funkcja do wybierania losowego ruchu komputera (papier, kamień, nożyce)
 int computerMove() {
-    return rand() % 3; // 0 - papier, 1 - kamień, 2 - nożyce
+    return rand() % 3; //0 - paper, 1 - rock, 2 - scissors
 }
 
-// Funkcja do sprawdzania wyniku rundy
 int checkRound(int playerMove, int computerMove) {
-    if ((playerMove == 0 && computerMove == 1) || // papier pokonuje kamień
-        (playerMove == 1 && computerMove == 2) || // kamień pokonuje nożyce
-        (playerMove == 2 && computerMove == 0))   // nożyce pokonują papier
-        return 1; // gracz wygrywa
+    if ((playerMove == 0 && computerMove == 1) || // paper beats rock
+        (playerMove == 1 && computerMove == 2) || // rock beats scissors
+        (playerMove == 2 && computerMove == 0))   // scissors beat paper
+        return 0; // player wins
     else if (playerMove == computerMove)
-        return 0; // remis
+        return 1; // draw
     else
-        return -1; // komputer wygrywa
+        return 2; // computer wins
 }
 
 int main() {
-    int playerMove, computerMoveResult, roundCount = 0;
+    int roundCount = 1;
+    int playerMove, computerMoveResult;
     int playerWins = 0, computerWins = 0, draws = 0;
-    char command[10];
-
-    srand(time(NULL)); // Inicjalizacja generatora liczb pseudolosowych
-
+    int scores[] = {playerWins, draws, computerWins, roundCount};
+    srand(time(NULL));
     while (1) {
-        printf("Podaj swój ruch (0 - papier, 1 - kamień, 2 - nożyce): ");
+        printf("Enter your move:\n0-paper\n1-rock\n2-scissors\n\n3 - end game");
         scanf("%d", &playerMove);
-
+        if (playerMove == 3) {
+            break;
+        }
         if (playerMove < 0 || playerMove > 2) {
-            printf("Niepoprawny ruch. Podaj liczbę od 0 do 2.\n");
+            printf("Incorrect move!\n");
             continue;
         }
-
         computerMoveResult = computerMove();
-        printf("Komputer wybrał: %d\n", computerMoveResult);
-
+        printf("The computer chose %d\n", computerMoveResult);
         int result = checkRound(playerMove, computerMoveResult);
+        switch (result) {
+            case 0:
+                scores[0]++;
+                break;
+            case 1:
+                scores[1]++;
 
-        if (result == 1)
-            playerWins++;
-        else if (result == -1)
-            computerWins++;
-        else
-            draws++;
+                break;
+            case 2:
+                scores[2]++;
+                break;
 
-        roundCount++;
-
-        printf("Wynik rundy: %d\n", result);
-
-        printf("Czy chcesz zakończyć grę? (tak/nie): ");
-        scanf("%s", command);
-
-        if (strcmp(command, "tak") == 0 || roundCount >= MAX_ROUNDS)
-            break;
+        }
     }
-
-    printf("Liczba zwycięstw gracza: %d\n", playerWins);
-    printf("Liczba zwycięstw komputera: %d\n", computerWins);
-    printf("Liczba remisów: %d\n", draws);
-
+    printf("player wins: %d\ndraws: %d\ncomputers wins: %d", scores[0], scores[1], scores[2]);
     return 0;
 }
