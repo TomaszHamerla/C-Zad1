@@ -1,3 +1,0 @@
-C:/Users/Tomasz/Desktop/TomaszHamerlaZad1/zad6/cmake-build-debug/CMakeFiles/zad6.dir
-C:/Users/Tomasz/Desktop/TomaszHamerlaZad1/zad6/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Tomasz/Desktop/TomaszHamerlaZad1/zad6/cmake-build-debug/CMakeFiles/rebuild_cache.dir
